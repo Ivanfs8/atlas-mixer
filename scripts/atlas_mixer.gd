@@ -4,15 +4,27 @@ class_name AtlasMixerMaterial
 
 export (float, 1, 64, 1) var tiles: float = 1 setget set_tiles
 func set_tiles(value: float):
-	tiles = value
 	if VisualServer.material_get_param(get_rid(), "tiles") != null:
-		VisualServer.material_set_param(get_rid(), "tiles", tiles)
+		VisualServer.material_set_param(get_rid(), "tiles", value)
+	
+	if (value < 2 || (value > 1 && tiles == 1)) && bake_shader:
+		connect_update()
+		emit_signal("changed")
+	
+	tiles = value
+
 export var rng: float = 0.0 setget set_rng
 func set_rng(value: float):
 	rng = value
 	if VisualServer.material_get_param(get_rid(), "rng") != null:
 		VisualServer.material_set_param(get_rid(), "rng", rng)
-export var rotate: bool = false #setget set_rotate
+export var rotate: bool = false setget set_rotate
+func set_rotate(value):
+	rotate = value
+	if bake_shader: 
+		connect_update()
+		emit_signal("changed")
+	
 export (float, -359, 359, 0.01) var rotation_amount: float = 90
 func set_rotation(value: float):
 	rotation_amount = value
@@ -24,7 +36,8 @@ func set_make(value: bool):
 	bake_shader = value
 	if value: 
 		make_shader()
-		print("shader baked")
+		connect_update()
+	else: disconnect_update()
 
 const DEFAULT_SPATIAL_CODE := """
 shader_type spatial;
@@ -58,7 +71,6 @@ const SHADER_PARAM: String = """
 //PARAM
 uniform float tiles : hint_range(1, 64, 1);
 uniform float rng;
-uniform bool rotate;
 uniform float rotation_d = 90.;
 """
 
@@ -120,6 +132,34 @@ vec4 am_tex(sampler2D sample, in vec2 uv, in vec2 scale)
 	return textureGrad(sample, uv, dx, dy);
 }
 """
+
+func _init():
+	if bake_shader:
+		update_shader()
+		connect_update()
+	else:
+		disconnect_update()
+
+func _set(_property, _value):
+	_property = _value
+	if bake_shader: 
+		connect_update()
+		emit_signal("changed")
+
+func update_shader(): 
+	if bake_shader:
+		yield(VisualServer, "frame_post_draw")
+		make_shader()
+
+func connect_update():
+	if !bake_shader: return
+	if !is_connected("changed", self, "update_shader"):
+		var err := connect("changed", self, "update_shader")
+		if err != OK: print(err)
+
+func disconnect_update():
+	for sig in get_signal_connection_list("changed"):
+		disconnect(sig["signal"], sig["target"], sig["method"])
 
 func make_shader():
 	var code := VisualServer.shader_get_code(
@@ -211,11 +251,12 @@ func make_shader():
 		new_frag_func = new_frag_func.replace("base_uv)", "base_uv, uv1_scale.xz)")
 		code = code.replace(fragment_func, new_frag_func)
 	
-	print("code: \n", code)
+	#print("code: \n", code)
 	VisualServer.shader_set_code(VisualServer.material_get_shader(get_rid()), code)
 	
 	#SET parameters
 	VisualServer.material_set_param(get_rid(), "tiles", tiles)
 	VisualServer.material_set_param(get_rid(), "rng", rng)
-	VisualServer.material_set_param(get_rid(), "rotate", rotate)
 	VisualServer.material_set_param(get_rid(), "rotation_d", rotation_amount)
+	
+	print("shader baked")

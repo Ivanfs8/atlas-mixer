@@ -3,7 +3,7 @@
 [ext_resource path="res://materials/MaterialMaker/Water_albedo.png" type="Texture" id=1]
 [ext_resource path="res://materials/MaterialMaker/Water_normal.png" type="Texture" id=2]
 [ext_resource path="res://test_atlas_mixer.tres" type="Material" id=3]
-[ext_resource path="res://Water.shader" type="Shader" id=4]
+[ext_resource path="res://shaders/Water.shader" type="Shader" id=4]
 [ext_resource path="res://scenes/RandomFloorTile.material" type="Material" id=5]
 [ext_resource path="res://env.tres" type="Environment" id=7]
 [ext_resource path="res://materials/MaterialMaker/TileFloor/TileFloor.tres" type="Material" id=12]
@@ -24,6 +24,7 @@ shader_param/normal_map = ExtResource( 2 )
 [node name="Spatial" type="Spatial"]
 
 [node name="MeshInstance4" type="MeshInstance" parent="."]
+visible = false
 material_override = SubResource( 1 )
 cast_shadow = 0
 mesh = SubResource( 2 )

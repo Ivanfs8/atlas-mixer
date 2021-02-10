@@ -1,6 +1,6 @@
 [gd_resource type="SpatialMaterial" load_steps=6 format=2]
 
-[ext_resource path="res://atlas_mixer.gd" type="Script" id=1]
+[ext_resource path="res://scripts/atlas_mixer.gd" type="Script" id=1]
 [ext_resource path="res://materials/MaterialMaker/TileFloor/TileFloor_orm.png" type="Texture" id=2]
 [ext_resource path="res://materials/MaterialMaker/TileFloor/TileFloor_normal.png" type="Texture" id=3]
 [ext_resource path="res://materials/MaterialMaker/TileFloor/TileFloor_depth.png" type="Texture" id=4]
@@ -19,9 +19,11 @@ depth_deep_parallax = false
 depth_flip_tangent = false
 depth_flip_binormal = false
 depth_texture = ExtResource( 4 )
+uv1_scale = Vector3( 2, 1, 2 )
+uv1_triplanar = true
 script = ExtResource( 1 )
 tiles = 4.0
-rng = 0.115
+rng = 0.678
 rotate = true
 rotation_amount = 90.0
 bake_shader = true

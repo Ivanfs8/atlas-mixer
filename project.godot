@@ -12,7 +12,7 @@ _global_script_classes=[ {
 "base": "SpatialMaterial",
 "class": "AtlasMixerMaterial",
 "language": "GDScript",
-"path": "res://atlas_mixer.gd"
+"path": "res://scripts/atlas_mixer.gd"
 } ]
 _global_script_class_icons={
 "AtlasMixerMaterial": ""
