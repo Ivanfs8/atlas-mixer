@@ -2,10 +2,22 @@ tool
 extends SpatialMaterial
 class_name AtlasMixerMaterial
 
-export (float, 1, 64, 1) var tiles: float = 1
-export var rng: float = 0.0
+export (float, 1, 64, 1) var tiles: float = 1 setget set_tiles
+func set_tiles(value: float):
+	tiles = value
+	if VisualServer.material_get_param(get_rid(), "tiles") != null:
+		VisualServer.material_set_param(get_rid(), "tiles", tiles)
+export var rng: float = 0.0 setget set_rng
+func set_rng(value: float):
+	rng = value
+	if VisualServer.material_get_param(get_rid(), "rng") != null:
+		VisualServer.material_set_param(get_rid(), "rng", rng)
 export var rotate: bool = false #setget set_rotate
 export (float, -359, 359, 0.01) var rotation_amount: float = 90
+func set_rotation(value: float):
+	rotation_amount = value
+	if VisualServer.material_get_param(get_rid(), "rotation_d") != null:
+		VisualServer.material_set_param(get_rid(), "rotation_d", rotation_amount)
 
 export var bake_shader: bool = false setget set_make
 func set_make(value: bool):
@@ -109,10 +121,6 @@ vec4 am_tex(sampler2D sample, in vec2 uv, in vec2 scale)
 }
 """
 
-#func set_rotate(value):
-#	rotate = value
-#	VisualServer.material_set_param(get_rid(), "rotate", rotate)
-
 func make_shader():
 	var code := VisualServer.shader_get_code(
 			VisualServer.material_get_shader(get_rid())
@@ -139,7 +147,7 @@ func make_shader():
 	if code.find("RANDOM_RANGE") == -1:
 		functions += RANDOM_RANGE
 
-	if tiles > 1 && code.find("RANDOM_TILED") == -1:
+	if code.find("RANDOM_TILED") == -1:
 		functions += RANDOM_TILED
 		
 	if rotate && code.find("ROTATE_UV") == -1:
@@ -151,11 +159,8 @@ func make_shader():
 	
 	#ADD the proper functions to apply on uv in am_tex
 	if tiles > 1:
-#		new_tex_func = new_tex_func.insert(call_line, "\n uv = rand_tiled_uv(uv);\n")
-#		call_line += "\n uv = rand_tiled_uv(uv);\n".length()
 		new_tex_func = new_tex_func.replace("//RAND_TILED", "uv = rand_tiled_uv(uv);")
 	if rotate:
-		#new_tex_func = new_tex_func.insert(call_line, "uv = rotateUV( uv, vec2(0.5), rotation_d * floor( rand_range(floor(uv) + rng, 0,4) ));")
 		new_tex_func = new_tex_func.replace("//ROTATE_UV", "uv = rotateUV( uv, vec2(0.5), rotation_d * floor( rand_range(floor(uv) + rng, 0,4) ));")
 	
 	#ADD or REPLACE the am_tex function
@@ -204,7 +209,6 @@ func make_shader():
 		
 		var new_frag_func: String = fragment_func.replace("texture(", "am_tex(")
 		new_frag_func = new_frag_func.replace("base_uv)", "base_uv, uv1_scale.xz)")
-#		if depth_enabled: new_frag_func = new_frag_func.replace("(texture_depth, base_uv)", "(texture_depth, base_uv, uv1_scale.xz)")
 		code = code.replace(fragment_func, new_frag_func)
 	
 	print("code: \n", code)
@@ -213,6 +217,5 @@ func make_shader():
 	#SET parameters
 	VisualServer.material_set_param(get_rid(), "tiles", tiles)
 	VisualServer.material_set_param(get_rid(), "rng", rng)
-	print("rng: ", VisualServer.material_get_param(get_rid(), "rng"))
 	VisualServer.material_set_param(get_rid(), "rotate", rotate)
 	VisualServer.material_set_param(get_rid(), "rotation_d", rotation_amount)
