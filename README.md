@@ -1,6 +1,8 @@
 # atlas-mixer
 A godot shader that mixes an atlas texture to avoid repetition based on this [method](https://www.youtube.com/watch?v=SiBhArwW7YU) from [SOA Academy on youtube](https://www.youtube.com/channel/UCFW2qFuZWgAuFmFLHQdJWsA)
 
+![Demo](AtlasMixerDemo.gif)
+
 This Material will choose a random tile from the texture atlas and rotate it randomly (optional). For the effect to work, the edges of all tiles of the atlas must be the same but the inside should be different.
 
 HOW TO USE:
