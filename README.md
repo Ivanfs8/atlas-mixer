@@ -4,9 +4,9 @@ A godot shader that mixes an atlas texture to avoid repetition
 This Material will choose a random tile from the texture atlas and rotate it randomly (optional). For the effect to work, the edges of all tiles of the atlas must be the same but the inside should be different.
 
 HOW TO USE:
-1- Drop the atlas_mixer.gd script anywhere in your project
-2- Create the new custom Resource "AtlasMixerMaterial", that inherits from SpatialMaterial
-3- To make the material work, you have to set the "Bake Shader" property to true anytime you add or remove features
+1 - Drop the atlas_mixer.gd script anywhere in your project
+2 - Create the new custom Resource "AtlasMixerMaterial", that inherits from SpatialMaterial
+3 - To make the material work, you have to set the "Bake Shader" property to true anytime you add or remove features
 
 WARNING:
 - Should work fine in-game but actual perfomance not tested
