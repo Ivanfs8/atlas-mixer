@@ -1,0 +1,8 @@
+{
+	"contains_albedo": true,
+	"resolution": 64,
+	"src": {
+		"a": "#ff888888",
+		"rgb": "res://materials/textures/earth/earth_a.png"
+	}
+}

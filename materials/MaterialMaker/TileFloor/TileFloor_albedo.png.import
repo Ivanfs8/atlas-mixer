@@ -1,0 +1,34 @@
+[remap]
+
+importer="texture"
+type="StreamTexture"
+path="res://.import/TileFloor_albedo.png-a1f849e0461a6a75d2cfa163c82d0846.stex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://materials/MaterialMaker/TileFloor/TileFloor_albedo.png"
+dest_files=[ "res://.import/TileFloor_albedo.png-a1f849e0461a6a75d2cfa163c82d0846.stex" ]
+
+[params]
+
+compress/mode=0
+compress/lossy_quality=0.73
+compress/hdr_mode=0
+compress/bptc_ldr=0
+compress/normal_map=0
+flags/repeat=1
+flags/filter=false
+flags/mipmaps=true
+flags/anisotropic=false
+flags/srgb=1
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/HDR_as_SRGB=false
+process/invert_color=false
+stream=0
+size_limit=0
+detect_3d=false
+svg/scale=1.0

@@ -1,0 +1,11 @@
+[gd_resource type="SpatialMaterial" load_steps=2 format=2]
+
+[ext_resource path="res://atlas_mixer.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+tiles = 1.0
+rng = 0.211
+rotate = true
+rotation_amount = 90.0
+bake_shader = false
