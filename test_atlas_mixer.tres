@@ -1,13 +1,27 @@
-[gd_resource type="SpatialMaterial" load_steps=3 format=2]
+[gd_resource type="SpatialMaterial" load_steps=6 format=2]
 
 [ext_resource path="res://atlas_mixer.gd" type="Script" id=1]
-[ext_resource path="res://materials/randomtest3.png" type="Texture" id=2]
+[ext_resource path="res://materials/MaterialMaker/TileFloor/TileFloor_orm.png" type="Texture" id=2]
+[ext_resource path="res://materials/MaterialMaker/TileFloor/TileFloor_normal.png" type="Texture" id=3]
+[ext_resource path="res://materials/MaterialMaker/TileFloor/TileFloor_depth.png" type="Texture" id=4]
+[ext_resource path="res://materials/MaterialMaker/TileFloor/TileFloor_albedo.png" type="Texture" id=5]
 
 [resource]
-albedo_texture = ExtResource( 2 )
+albedo_texture = ExtResource( 5 )
+roughness_texture = ExtResource( 2 )
+roughness_texture_channel = 1
+normal_enabled = true
+normal_scale = 1.0
+normal_texture = ExtResource( 3 )
+depth_enabled = true
+depth_scale = 0.01
+depth_deep_parallax = false
+depth_flip_tangent = false
+depth_flip_binormal = false
+depth_texture = ExtResource( 4 )
 script = ExtResource( 1 )
-tiles = 3.0
-rng = 0.184
+tiles = 4.0
+rng = 0.115
 rotate = true
 rotation_amount = 90.0
 bake_shader = true
