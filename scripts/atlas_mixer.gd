@@ -21,7 +21,7 @@ func set_rng(value: float):
 export var rotate: bool = false setget set_rotate
 func set_rotate(value):
 	rotate = value
-	if bake_shader: 
+	if bake_shader:
 		connect_update()
 		emit_signal("changed")
 	
@@ -34,10 +34,13 @@ func set_rotation(value: float):
 export var bake_shader: bool = false setget set_make
 func set_make(value: bool):
 	bake_shader = value
-	if value: 
+	if value:
+		yield(VisualServer, "frame_post_draw")
 		make_shader()
 		connect_update()
 	else: disconnect_update()
+
+var adjusted_shader: RID
 
 const DEFAULT_SPATIAL_CODE := """
 shader_type spatial;
@@ -134,19 +137,27 @@ vec4 am_tex(sampler2D sample, in vec2 uv, in vec2 scale)
 """
 
 func _init():
-	if bake_shader:
-		update_shader()
-		connect_update()
-	else:
-		disconnect_update()
+	print("init")
+	adjusted_shader = VisualServer.shader_create()
+	
+	yield(VisualServer, "frame_post_draw")
+	if bake_shader: connect_update()
+	else: disconnect_update()
 
 func _set(_property, _value):
 	_property = _value
-	if bake_shader: 
+	if bake_shader:
 		connect_update()
 		emit_signal("changed")
 
-func update_shader(): 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE:
+		if adjusted_shader:
+			VisualServer.free_rid(adjusted_shader)
+#	if what == NOTIFICATION_POSTINITIALIZE:
+#		if !adjusted_shader: adjusted_shader = VisualServer.shader_create()
+
+func update_shader():
 	if bake_shader:
 		yield(VisualServer, "frame_post_draw")
 		make_shader()
@@ -162,8 +173,10 @@ func disconnect_update():
 		disconnect(sig["signal"], sig["target"], sig["method"])
 
 func make_shader():
+	if VisualServer.material_get_shader(get_rid()) == null: return
+	
 	var code := VisualServer.shader_get_code(
-			VisualServer.material_get_shader(get_rid())
+		VisualServer.material_get_shader(get_rid())
 	)
 	
 	if code.empty(): code = DEFAULT_SPATIAL_CODE
@@ -252,7 +265,8 @@ func make_shader():
 		code = code.replace(fragment_func, new_frag_func)
 	
 	#print("code: \n", code)
-	VisualServer.shader_set_code(VisualServer.material_get_shader(get_rid()), code)
+	VisualServer.shader_set_code(adjusted_shader, code)
+	VisualServer.material_set_shader(get_rid(), adjusted_shader)
 	
 	#SET parameters
 	VisualServer.material_set_param(get_rid(), "tiles", tiles)
